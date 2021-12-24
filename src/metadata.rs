@@ -8,9 +8,9 @@ use std::cmp::{max, min};
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Metadata {
     title: String,
-    season: Option<i32>,
-    episode: Option<i32>,
-    year: Option<i32>,
+    season: Option<u16>,
+    episode: Option<u16>,
+    year: Option<u16>,
     resolution: Option<String>,
     quality: Option<String>,
     codec: Option<String>,
@@ -237,13 +237,13 @@ impl Metadata {
     pub fn title(&self) -> &str {
         &self.title
     }
-    pub fn season(&self) -> Option<i32> {
+    pub fn season(&self) -> Option<u16> {
         self.season
     }
-    pub fn episode(&self) -> Option<i32> {
+    pub fn episode(&self) -> Option<u16> {
         self.episode
     }
-    pub fn year(&self) -> Option<i32> {
+    pub fn year(&self) -> Option<u16> {
         self.year
     }
     pub fn resolution(&self) -> Option<&str> {
