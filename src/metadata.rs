@@ -8,7 +8,7 @@ use std::cmp::{max, min};
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Metadata {
-    title: std::string::String,
+    title: String,
     season: Option<u16>,
     episode: Option<u16>,
     year: Option<u16>,
@@ -203,19 +203,26 @@ impl Metadata {
         }
         title = title.trim_start_matches(" -");
         title = title.trim_end_matches(" -");
-        let title = match !title.contains(' ') && title.contains('.') {
+        let mut title = match !title.contains(' ') && title.contains('.') {
             true => Cow::Owned(title.replace('.', " ")),
             false => Cow::Borrowed(title),
         };
-        let title = title
-            .replace('_', " ")
-            .replacen('(', "", 1)
-            .replacen("- ", "", 1)
-            .trim()
-            .to_string();
+        if title.contains('_') {
+            title = Cow::Owned(title.replace('_', " "));
+        }
+        if title.contains('(') {
+            title = Cow::Owned(title.replacen('(', "", 1));
+        }
+        if title.contains("- ") {
+            title = Cow::Owned(title.replacen("- ", "", 1));
+        }
+        title = match title {
+            Cow::Owned(s) => Cow::Owned(s.trim().to_string()),
+            Cow::Borrowed(s) => Cow::Borrowed(s.trim()),
+        };
 
         Ok(Metadata {
-            title,
+            title: title.into(),
             season: season.map(|s| s.parse().unwrap()),
             episode: episode.map(|s| s.parse().unwrap()),
             year: year.map(|s| s.parse().unwrap()),
