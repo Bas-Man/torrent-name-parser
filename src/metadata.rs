@@ -2,12 +2,13 @@ use crate::error::ErrorMatch;
 use crate::pattern;
 use crate::pattern::Pattern;
 use regex::Captures;
+use smartstring::alias::String;
 use std::borrow::Cow;
 use std::cmp::{max, min};
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Metadata {
-    title: String,
+    title: std::string::String,
     season: Option<u16>,
     episode: Option<u16>,
     year: Option<u16>,
@@ -63,7 +64,7 @@ fn check_pattern<'a>(
     })
 }
 
-fn capture_to_string(caps: Option<Captures<'_>>) -> Option<String> {
+fn capture_to_string(caps: Option<Captures<'_>>) -> Option<std::string::String> {
     caps.and_then(|c| c.get(0)).map(|m| m.as_str().to_string())
 }
 
@@ -173,15 +174,15 @@ impl Metadata {
 
         if title_start >= title_end {
             return Err(ErrorMatch::new(vec![
-                ("season", season.map(String::from)),
-                ("episode", episode.map(String::from)),
-                ("year", year.map(String::from)),
-                ("resolution", resolution),
-                ("quality", quality),
-                ("codec", codec),
-                ("audio", audio),
-                ("group", group),
-                ("imdb", imdb),
+                ("season", season.map(std::string::String::from)),
+                ("episode", episode.map(std::string::String::from)),
+                ("year", year.map(std::string::String::from)),
+                ("resolution", resolution.map(|s| s.into())),
+                ("quality", quality.map(|s| s.into())),
+                ("codec", codec.map(|s| s.into())),
+                ("audio", audio.map(|s| s.into())),
+                ("group", group.map(|s| s.into())),
+                ("imdb", imdb.map(|s| s.into())),
                 ("extended", capture_to_string(extended)),
                 ("proper", capture_to_string(proper)),
                 ("repack", capture_to_string(repack)),
