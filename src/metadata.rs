@@ -7,6 +7,27 @@ use std::borrow::Cow;
 use std::cmp::{max, min};
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
+pub struct MetadataRef<'name> {
+    title: Cow<'name, str>,
+    season: Option<u16>,
+    episode: Option<u16>,
+    year: Option<u16>,
+    resolution: Option<&'name str>,
+    quality: Option<&'name str>,
+    codec: Option<&'name str>,
+    audio: Option<&'name str>,
+    group: Option<&'name str>,
+    extended: bool,
+    hardcoded: bool,
+    proper: bool,
+    repack: bool,
+    widescreen: bool,
+    unrated: bool,
+    three_d: bool,
+    imdb: Option<&'name str>,
+}
+
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Metadata {
     title: String,
     season: Option<u16>,
@@ -70,6 +91,64 @@ fn capture_to_string(caps: Option<Captures<'_>>) -> Option<std::string::String> 
 
 impl Metadata {
     pub fn from(name: &str) -> Result<Self, ErrorMatch> {
+        Ok(MetadataRef::from(name)?.to_owned())
+    }
+
+    pub fn title(&self) -> &str {
+        &self.title
+    }
+    pub fn season(&self) -> Option<u16> {
+        self.season
+    }
+    pub fn episode(&self) -> Option<u16> {
+        self.episode
+    }
+    pub fn year(&self) -> Option<u16> {
+        self.year
+    }
+    pub fn resolution(&self) -> Option<&str> {
+        self.resolution.as_deref()
+    }
+    pub fn quality(&self) -> Option<&str> {
+        self.quality.as_deref()
+    }
+    pub fn codec(&self) -> Option<&str> {
+        self.codec.as_deref()
+    }
+    pub fn audio(&self) -> Option<&str> {
+        self.audio.as_deref()
+    }
+    pub fn group(&self) -> Option<&str> {
+        self.group.as_deref()
+    }
+    pub fn imdb_tag(&self) -> Option<&str> {
+        self.imdb.as_deref()
+    }
+    pub fn extended(&self) -> bool {
+        self.extended
+    }
+    pub fn hardcoded(&self) -> bool {
+        self.hardcoded
+    }
+    pub fn proper(&self) -> bool {
+        self.proper
+    }
+    pub fn repack(&self) -> bool {
+        self.repack
+    }
+    pub fn widescreen(&self) -> bool {
+        self.widescreen
+    }
+    pub fn unrated(&self) -> bool {
+        self.unrated
+    }
+    pub fn three_d(&self) -> bool {
+        self.three_d
+    }
+}
+
+impl<'name> MetadataRef<'name> {
+    pub fn from(name: &'name str) -> Result<Self, ErrorMatch> {
         let mut title_start = 0;
         let mut title_end = name.len();
 
@@ -114,48 +193,42 @@ impl Metadata {
             &mut title_start,
             &mut title_end,
             |caps| caps.get(1).map(|m| m.as_str()),
-        )
-        .map(String::from);
+        );
         let quality = check_pattern_and_extract(
             &pattern::QUALITY,
             name,
             &mut title_start,
             &mut title_end,
             |caps| caps.get(0).map(|m| m.as_str()),
-        )
-        .map(String::from);
+        );
         let codec = check_pattern_and_extract(
             &pattern::CODEC,
             name,
             &mut title_start,
             &mut title_end,
             |caps| caps.get(0).map(|m| m.as_str()),
-        )
-        .map(String::from);
+        );
         let audio = check_pattern_and_extract(
             &pattern::AUDIO,
             name,
             &mut title_start,
             &mut title_end,
             |caps| caps.get(0).map(|m| m.as_str()),
-        )
-        .map(String::from);
+        );
         let group = check_pattern_and_extract(
             &pattern::GROUP,
             name,
             &mut title_start,
             &mut title_end,
             |caps| caps.get(2).map(|m| m.as_str()),
-        )
-        .map(String::from);
+        );
         let imdb = check_pattern_and_extract(
             &pattern::IMDB,
             name,
             &mut title_start,
             &mut title_end,
             |caps| caps.get(0).map(|m| m.as_str()),
-        )
-        .map(String::from);
+        );
 
         let extended = check_pattern(&pattern::EXTENDED, name, &mut title_start, &mut title_end);
         let hardcoded = check_pattern(&pattern::HARDCODED, name, &mut title_start, &mut title_end);
@@ -221,8 +294,8 @@ impl Metadata {
             Cow::Borrowed(s) => Cow::Borrowed(s.trim()),
         };
 
-        Ok(Metadata {
-            title: title.into(),
+        Ok(Self {
+            title,
             season: season.map(|s| s.parse().unwrap()),
             episode: episode.map(|s| s.parse().unwrap()),
             year: year.map(|s| s.parse().unwrap()),
@@ -242,6 +315,28 @@ impl Metadata {
         })
     }
 
+    pub fn to_owned(self) -> Metadata {
+        Metadata {
+            title: self.title.into(),
+            season: self.season,
+            episode: self.episode,
+            year: self.year,
+            resolution: self.resolution.map(String::from),
+            quality: self.quality.map(String::from),
+            codec: self.codec.map(String::from),
+            audio: self.audio.map(String::from),
+            group: self.group.map(String::from),
+            extended: self.extended,
+            hardcoded: self.hardcoded,
+            proper: self.proper,
+            repack: self.repack,
+            widescreen: self.widescreen,
+            unrated: self.unrated,
+            three_d: self.three_d,
+            imdb: self.imdb.map(String::from),
+        }
+    }
+
     pub fn title(&self) -> &str {
         &self.title
     }
@@ -255,22 +350,22 @@ impl Metadata {
         self.year
     }
     pub fn resolution(&self) -> Option<&str> {
-        self.resolution.as_deref()
+        self.resolution
     }
     pub fn quality(&self) -> Option<&str> {
-        self.quality.as_deref()
+        self.quality
     }
     pub fn codec(&self) -> Option<&str> {
-        self.codec.as_deref()
+        self.codec
     }
     pub fn audio(&self) -> Option<&str> {
-        self.audio.as_deref()
+        self.audio
     }
     pub fn group(&self) -> Option<&str> {
-        self.group.as_deref()
+        self.group
     }
     pub fn imdb_tag(&self) -> Option<&str> {
-        self.imdb.as_deref()
+        self.imdb
     }
     pub fn extended(&self) -> bool {
         self.extended

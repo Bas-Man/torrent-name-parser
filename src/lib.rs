@@ -9,3 +9,4 @@ mod pattern;
 mod test;
 
 pub use metadata::Metadata;
+pub use metadata::MetadataRef;
