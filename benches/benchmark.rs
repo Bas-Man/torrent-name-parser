@@ -25,50 +25,50 @@ pub fn names() {
     assert_eq!(m.episode(), None);
     assert_eq!(m.year(), Some(2018));
     assert_eq!(m.title(), "Pacific Rim 2 Uprising");
-    assert_eq!(m.resolution(), Some("1080p"));
-    assert_eq!(m.quality(), Some("HDRip"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
+    assert_eq!(m.quality(), Some(Quality::HD));
 
     let m = Metadata::from("Blade.Runner.2049.2017.HDRip").unwrap();
     assert_eq!(m.season(), None);
     assert_eq!(m.episode(), None);
     assert_eq!(m.year(), Some(2017));
     assert_eq!(m.title(), "Blade Runner 2049");
-    assert_eq!(m.quality(), Some("HDRip"));
+    assert_eq!(m.quality(), Some(Quality::HD));
 
     let m = Metadata::from("Euphoria.US.S01E03.Made.You.Look.1080p.AMZN.WEB-DL.DDP5.1.H.264-KiNGS")
         .unwrap();
     assert_eq!(m.season(), Some(1));
     assert_eq!(m.episode(), Some(3));
     assert_eq!(m.year(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
     assert_eq!(m.title(), "Euphoria");
 
     let m = Metadata::from("narcos.s01e10.1080p.bluray.x264-rovers").unwrap();
     assert_eq!(m.season(), Some(1));
     assert_eq!(m.episode(), Some(10));
     assert_eq!(m.year(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
     assert_eq!(m.title(), "narcos");
 
     let m = Metadata::from("Rome.S01E11.The.Spoils.BluRay.10Bit.1080p.Dts.H265-d3g").unwrap();
     assert_eq!(m.season(), Some(1));
     assert_eq!(m.episode(), Some(11));
     assert_eq!(m.year(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
     assert_eq!(m.title(), "Rome");
 
     let m = Metadata::from("the.expanse.s01e09e10.1080p.bluray.x264-rovers").unwrap();
     assert_eq!(m.season(), Some(1));
     assert_eq!(m.episode(), Some(9));
     assert_eq!(m.year(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
     assert_eq!(m.title(), "the expanse");
 
     let m = Metadata::from("Attack on Titan (Shingeki no Kyojin) Season 2 [1080p x265 10bit BD Dual Audio AAC]/Episode 30 - Historia").unwrap();
     assert_eq!(m.season(), Some(2));
     assert_eq!(m.episode(), Some(30));
     assert_eq!(m.year(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
     assert_eq!(m.title(), "Attack on Titan");
 
     let m = Metadata::from("The Walking Dead S05E03 720p HDTV x264-ASAP[ettv]").unwrap();
@@ -76,8 +76,8 @@ pub fn names() {
     assert_eq!(m.episode(), Some(3));
     assert_eq!(m.year(), None);
     assert_eq!(m.title(), "The Walking Dead");
-    assert_eq!(m.resolution(), Some("720p"));
-    assert_eq!(m.codec(), Some("x264"));
+    assert_eq!(m.resolution(), Some(Resolution::R720p));
+    assert_eq!(m.codec(), Some(Codec::X264));
     assert_eq!(m.group(), Some("ASAP[ettv]"));
 
     let m = Metadata::from("Hercules (2014) 1080p BrRip H264 - YIFY").unwrap();
@@ -85,9 +85,9 @@ pub fn names() {
     assert_eq!(m.episode(), None);
     assert_eq!(m.year(), Some(2014));
     assert_eq!(m.title(), "Hercules");
-    assert_eq!(m.resolution(), Some("1080p"));
-    assert_eq!(m.quality(), Some("BrRip"));
-    assert_eq!(m.codec(), Some("H264"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
+    assert_eq!(m.quality(), Some(Quality::BluRay));
+    assert_eq!(m.codec(), Some(Codec::X264));
     assert_eq!(m.group(), Some("YIFY"));
 
     let m = Metadata::from("Dawn.of.the.Planet.of.the.Apes.2014.HDRip.XViD-EVO").unwrap();
@@ -95,8 +95,8 @@ pub fn names() {
     assert_eq!(m.episode(), None);
     assert_eq!(m.year(), Some(2014));
     assert_eq!(m.title(), "Dawn of the Planet of the Apes");
-    assert_eq!(m.quality(), Some("HDRip"));
-    assert_eq!(m.codec(), Some("XViD"));
+    assert_eq!(m.quality(), Some(Quality::HD));
+    assert_eq!(m.codec(), Some(Codec::Xvid));
     assert_eq!(m.group(), Some("EVO"));
 
     let m = Metadata::from("The Big Bang Theory S08E06 HDTV XviD-LOL [eztv]").unwrap();
@@ -117,9 +117,9 @@ pub fn names() {
     assert_eq!(m.year(), Some(2014));
     assert_eq!(m.title(), "Hercules");
     assert!(m.extended());
-    assert_eq!(m.audio(), Some("DD5.1"));
-    assert_eq!(m.resolution(), Some("1080p"));
-    assert_eq!(m.codec(), Some("H264"));
+    assert_eq!(m.audio(), Some(Audio::Dolby51));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
+    assert_eq!(m.codec(), Some(Codec::X264));
     assert_eq!(m.group(), Some("RARBG"));
 
     let m = Metadata::from("Hercules.2014.EXTENDED.HDRip.XViD-juggs[ETRG]").unwrap();
@@ -286,8 +286,8 @@ pub fn names() {
     .unwrap();
     assert_eq!(m.season(), None);
     assert_eq!(m.episode(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
-    assert_eq!(m.quality(), Some("WEB-DL"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
+    assert_eq!(m.quality(), Some(Quality::Web));
     assert_eq!(m.title(), "To All The Boys Always And Forever");
     assert_eq!(m.year(), Some(2021));
 
@@ -296,7 +296,7 @@ pub fn names() {
     assert_eq!(m.season(), Some(3));
     assert_eq!(m.episode(), Some(1));
     assert_eq!(m.title(), "The EXPANSE");
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
 
     let m = Metadata::from("[Judas] Re Zero 2020 - S01E01").unwrap();
     assert_eq!(m.season(), Some(1));
@@ -308,19 +308,19 @@ pub fn names() {
     assert_eq!(m.season(), Some(4));
     assert_eq!(m.episode(), Some(3));
     assert_eq!(m.title(), "Fargo");
-    assert_eq!(m.quality(), Some("WEB"));
+    assert_eq!(m.quality(), Some(Quality::Web));
 
     let m = Metadata::from("[SubsPlease] Dr. Stone S2 - 07 (1080p) [33538C7C]").unwrap();
     assert_eq!(m.season(), Some(2));
     assert_eq!(m.episode(), Some(7));
     assert_eq!(m.title(), "Dr. Stone");
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
 
     let m = Metadata::from("[SubsPlease] Fumetsu no Anata e S2 - 01 (1080p) [1D65E30D]").unwrap();
     assert_eq!(m.season(), Some(2));
     assert_eq!(m.episode(), Some(1));
     assert_eq!(m.title(), "Fumetsu no Anata e");
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
 
     let m = Metadata::from(
         "A Shaun the Sheep Movie - Farmageddon (2019) [h265 Remux-1080p] [tt6193408]",
@@ -368,15 +368,15 @@ pub fn names_ref() {
     assert_eq!(m.episode(), None);
     assert_eq!(m.year(), Some(2018));
     assert_eq!(m.title(), "Pacific Rim 2 Uprising");
-    assert_eq!(m.resolution(), Some("1080p"));
-    assert_eq!(m.quality(), Some("HDRip"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
+    assert_eq!(m.quality(), Some(Quality::HD));
 
     let m = MetadataRef::from("Blade.Runner.2049.2017.HDRip").unwrap();
     assert_eq!(m.season(), None);
     assert_eq!(m.episode(), None);
     assert_eq!(m.year(), Some(2017));
     assert_eq!(m.title(), "Blade Runner 2049");
-    assert_eq!(m.quality(), Some("HDRip"));
+    assert_eq!(m.quality(), Some(Quality::HD));
 
     let m =
         MetadataRef::from("Euphoria.US.S01E03.Made.You.Look.1080p.AMZN.WEB-DL.DDP5.1.H.264-KiNGS")
@@ -384,35 +384,35 @@ pub fn names_ref() {
     assert_eq!(m.season(), Some(1));
     assert_eq!(m.episode(), Some(3));
     assert_eq!(m.year(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
     assert_eq!(m.title(), "Euphoria");
 
     let m = MetadataRef::from("narcos.s01e10.1080p.bluray.x264-rovers").unwrap();
     assert_eq!(m.season(), Some(1));
     assert_eq!(m.episode(), Some(10));
     assert_eq!(m.year(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
     assert_eq!(m.title(), "narcos");
 
     let m = MetadataRef::from("Rome.S01E11.The.Spoils.BluRay.10Bit.1080p.Dts.H265-d3g").unwrap();
     assert_eq!(m.season(), Some(1));
     assert_eq!(m.episode(), Some(11));
     assert_eq!(m.year(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
     assert_eq!(m.title(), "Rome");
 
     let m = MetadataRef::from("the.expanse.s01e09e10.1080p.bluray.x264-rovers").unwrap();
     assert_eq!(m.season(), Some(1));
     assert_eq!(m.episode(), Some(9));
     assert_eq!(m.year(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
     assert_eq!(m.title(), "the expanse");
 
     let m = MetadataRef::from("Attack on Titan (Shingeki no Kyojin) Season 2 [1080p x265 10bit BD Dual Audio AAC]/Episode 30 - Historia").unwrap();
     assert_eq!(m.season(), Some(2));
     assert_eq!(m.episode(), Some(30));
     assert_eq!(m.year(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
     assert_eq!(m.title(), "Attack on Titan");
 
     let m = MetadataRef::from("The Walking Dead S05E03 720p HDTV x264-ASAP[ettv]").unwrap();
@@ -420,8 +420,8 @@ pub fn names_ref() {
     assert_eq!(m.episode(), Some(3));
     assert_eq!(m.year(), None);
     assert_eq!(m.title(), "The Walking Dead");
-    assert_eq!(m.resolution(), Some("720p"));
-    assert_eq!(m.codec(), Some("x264"));
+    assert_eq!(m.resolution(), Some(Resolution::R720p));
+    assert_eq!(m.codec(), Some(Codec::X264));
     assert_eq!(m.group(), Some("ASAP[ettv]"));
 
     let m = MetadataRef::from("Hercules (2014) 1080p BrRip H264 - YIFY").unwrap();
@@ -429,9 +429,9 @@ pub fn names_ref() {
     assert_eq!(m.episode(), None);
     assert_eq!(m.year(), Some(2014));
     assert_eq!(m.title(), "Hercules");
-    assert_eq!(m.resolution(), Some("1080p"));
-    assert_eq!(m.quality(), Some("BrRip"));
-    assert_eq!(m.codec(), Some("H264"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
+    assert_eq!(m.quality(), Some(Quality::BluRay));
+    assert_eq!(m.codec(), Some(Codec::X264));
     assert_eq!(m.group(), Some("YIFY"));
 
     let m = MetadataRef::from("Dawn.of.the.Planet.of.the.Apes.2014.HDRip.XViD-EVO").unwrap();
@@ -439,8 +439,8 @@ pub fn names_ref() {
     assert_eq!(m.episode(), None);
     assert_eq!(m.year(), Some(2014));
     assert_eq!(m.title(), "Dawn of the Planet of the Apes");
-    assert_eq!(m.quality(), Some("HDRip"));
-    assert_eq!(m.codec(), Some("XViD"));
+    assert_eq!(m.quality(), Some(Quality::HD));
+    assert_eq!(m.codec(), Some(Codec::Xvid));
     assert_eq!(m.group(), Some("EVO"));
 
     let m = MetadataRef::from("The Big Bang Theory S08E06 HDTV XviD-LOL [eztv]").unwrap();
@@ -461,9 +461,9 @@ pub fn names_ref() {
     assert_eq!(m.year(), Some(2014));
     assert_eq!(m.title(), "Hercules");
     assert!(m.extended());
-    assert_eq!(m.audio(), Some("DD5.1"));
-    assert_eq!(m.resolution(), Some("1080p"));
-    assert_eq!(m.codec(), Some("H264"));
+    assert_eq!(m.audio(), Some(Audio::Dolby51));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
+    assert_eq!(m.codec(), Some(Codec::X264));
     assert_eq!(m.group(), Some("RARBG"));
 
     let m = MetadataRef::from("Hercules.2014.EXTENDED.HDRip.XViD-juggs[ETRG]").unwrap();
@@ -632,8 +632,8 @@ pub fn names_ref() {
     .unwrap();
     assert_eq!(m.season(), None);
     assert_eq!(m.episode(), None);
-    assert_eq!(m.resolution(), Some("1080p"));
-    assert_eq!(m.quality(), Some("WEB-DL"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
+    assert_eq!(m.quality(), Some(Quality::Web));
     assert_eq!(m.title(), "To All The Boys Always And Forever");
     assert_eq!(m.year(), Some(2021));
 
@@ -642,7 +642,7 @@ pub fn names_ref() {
     assert_eq!(m.season(), Some(3));
     assert_eq!(m.episode(), Some(1));
     assert_eq!(m.title(), "The EXPANSE");
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
 
     let m = MetadataRef::from("[Judas] Re Zero 2020 - S01E01").unwrap();
     assert_eq!(m.season(), Some(1));
@@ -654,20 +654,20 @@ pub fn names_ref() {
     assert_eq!(m.season(), Some(4));
     assert_eq!(m.episode(), Some(3));
     assert_eq!(m.title(), "Fargo");
-    assert_eq!(m.quality(), Some("WEB"));
+    assert_eq!(m.quality(), Some(Quality::Web));
 
     let m = MetadataRef::from("[SubsPlease] Dr. Stone S2 - 07 (1080p) [33538C7C]").unwrap();
     assert_eq!(m.season(), Some(2));
     assert_eq!(m.episode(), Some(7));
     assert_eq!(m.title(), "Dr. Stone");
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
 
     let m =
         MetadataRef::from("[SubsPlease] Fumetsu no Anata e S2 - 01 (1080p) [1D65E30D]").unwrap();
     assert_eq!(m.season(), Some(2));
     assert_eq!(m.episode(), Some(1));
     assert_eq!(m.title(), "Fumetsu no Anata e");
-    assert_eq!(m.resolution(), Some("1080p"));
+    assert_eq!(m.resolution(), Some(Resolution::R1080p));
 
     let m = MetadataRef::from(
         "A Shaun the Sheep Movie - Farmageddon (2019) [h265 Remux-1080p] [tt6193408]",

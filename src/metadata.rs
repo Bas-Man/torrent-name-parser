@@ -1,11 +1,22 @@
-use crate::error::ErrorMatch;
+use crate::error::Error;
 use crate::pattern;
 use crate::pattern::Pattern;
 use bitflags::bitflags;
 use regex::Captures;
+use result::ResultOptionExt;
 use smartstring::alias::String;
 use std::borrow::Cow;
 use std::cmp::{max, min};
+use std::str::FromStr;
+
+mod resolution;
+pub use resolution::Resolution;
+mod quality;
+pub use quality::Quality;
+mod codec;
+pub use codec::Codec;
+mod audio;
+pub use audio::Audio;
 
 bitflags! {
     #[derive(Default)]
@@ -26,10 +37,10 @@ pub struct MetadataRef<'name> {
     season: Option<u16>,
     episode: Option<u16>,
     year: Option<u16>,
-    resolution: Option<&'name str>,
-    quality: Option<&'name str>,
-    codec: Option<&'name str>,
-    audio: Option<&'name str>,
+    resolution: Option<Resolution>,
+    quality: Option<Quality>,
+    codec: Option<Codec>,
+    audio: Option<Audio>,
     group: Option<&'name str>,
     flags: Flags,
     imdb: Option<&'name str>,
@@ -41,10 +52,10 @@ pub struct Metadata {
     season: Option<u16>,
     episode: Option<u16>,
     year: Option<u16>,
-    resolution: Option<String>,
-    quality: Option<String>,
-    codec: Option<String>,
-    audio: Option<String>,
+    resolution: Option<Resolution>,
+    quality: Option<Quality>,
+    codec: Option<Codec>,
+    audio: Option<Audio>,
     group: Option<String>,
     flags: Flags,
     imdb: Option<String>,
@@ -93,7 +104,7 @@ fn capture_to_string(caps: Option<Captures<'_>>) -> Option<std::string::String> 
 
 impl Metadata {
     #[inline]
-    pub fn from(name: &str) -> Result<Self, ErrorMatch> {
+    pub fn from(name: &str) -> Result<Self, Error> {
         Ok(MetadataRef::from(name)?.to_owned())
     }
 
@@ -114,20 +125,20 @@ impl Metadata {
         self.year
     }
     #[inline]
-    pub fn resolution(&self) -> Option<&str> {
-        self.resolution.as_deref()
+    pub fn resolution(&self) -> Option<Resolution> {
+        self.resolution
     }
     #[inline]
-    pub fn quality(&self) -> Option<&str> {
-        self.quality.as_deref()
+    pub fn quality(&self) -> Option<Quality> {
+        self.quality
     }
     #[inline]
-    pub fn codec(&self) -> Option<&str> {
-        self.codec.as_deref()
+    pub fn codec(&self) -> Option<Codec> {
+        self.codec
     }
     #[inline]
-    pub fn audio(&self) -> Option<&str> {
-        self.audio.as_deref()
+    pub fn audio(&self) -> Option<Audio> {
+        self.audio
     }
     #[inline]
     pub fn group(&self) -> Option<&str> {
@@ -168,7 +179,7 @@ impl Metadata {
 }
 
 impl<'name> MetadataRef<'name> {
-    pub fn from(name: &'name str) -> Result<Self, ErrorMatch> {
+    pub fn from(name: &'name str) -> Result<Self, Error> {
         let mut title_start = 0;
         let mut title_end = name.len();
 
@@ -266,7 +277,7 @@ impl<'name> MetadataRef<'name> {
         let website = check_pattern(&pattern::WEBSITE, name, &mut title_start, &mut title_end);
 
         if title_start >= title_end {
-            return Err(ErrorMatch::new(vec![
+            return Err(Error::Match(vec![
                 ("season", season.map(std::string::String::from)),
                 ("episode", episode.map(std::string::String::from)),
                 ("year", year.map(std::string::String::from)),
@@ -342,10 +353,10 @@ impl<'name> MetadataRef<'name> {
             season: season.map(|s| s.parse().unwrap()),
             episode: episode.map(|s| s.parse().unwrap()),
             year: year.map(|s| s.parse().unwrap()),
-            resolution,
-            quality,
-            codec,
-            audio,
+            resolution: resolution.map(Resolution::from_str).invert()?,
+            quality: quality.map(Quality::from_str).invert()?,
+            codec: codec.map(Codec::from_str).invert()?,
+            audio: audio.map(Audio::from_str).invert()?,
             group,
             flags,
             imdb,
@@ -359,10 +370,10 @@ impl<'name> MetadataRef<'name> {
             season: self.season,
             episode: self.episode,
             year: self.year,
-            resolution: self.resolution.map(String::from),
-            quality: self.quality.map(String::from),
-            codec: self.codec.map(String::from),
-            audio: self.audio.map(String::from),
+            resolution: self.resolution,
+            quality: self.quality,
+            codec: self.codec,
+            audio: self.audio,
             group: self.group.map(String::from),
             flags: self.flags,
             imdb: self.imdb.map(String::from),
@@ -386,19 +397,19 @@ impl<'name> MetadataRef<'name> {
         self.year
     }
     #[inline]
-    pub fn resolution(&self) -> Option<&str> {
+    pub fn resolution(&self) -> Option<Resolution> {
         self.resolution
     }
     #[inline]
-    pub fn quality(&self) -> Option<&str> {
+    pub fn quality(&self) -> Option<Quality> {
         self.quality
     }
     #[inline]
-    pub fn codec(&self) -> Option<&str> {
+    pub fn codec(&self) -> Option<Codec> {
         self.codec
     }
     #[inline]
-    pub fn audio(&self) -> Option<&str> {
+    pub fn audio(&self) -> Option<Audio> {
         self.audio
     }
     #[inline]

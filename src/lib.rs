@@ -10,3 +10,8 @@ mod test;
 
 pub use metadata::Metadata;
 pub use metadata::MetadataRef;
+pub use metadata::Resolution;
+pub use metadata::Quality;
+pub use metadata::Codec;
+pub use metadata::Audio;
+
