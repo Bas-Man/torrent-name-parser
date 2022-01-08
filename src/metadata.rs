@@ -90,58 +90,76 @@ fn capture_to_string(caps: Option<Captures<'_>>) -> Option<std::string::String> 
 }
 
 impl Metadata {
+    #[inline]
     pub fn from(name: &str) -> Result<Self, ErrorMatch> {
         Ok(MetadataRef::from(name)?.to_owned())
     }
 
+    #[inline]
     pub fn title(&self) -> &str {
         &self.title
     }
+    #[inline]
     pub fn season(&self) -> Option<u16> {
         self.season
     }
+    #[inline]
     pub fn episode(&self) -> Option<u16> {
         self.episode
     }
+    #[inline]
     pub fn year(&self) -> Option<u16> {
         self.year
     }
+    #[inline]
     pub fn resolution(&self) -> Option<&str> {
         self.resolution.as_deref()
     }
+    #[inline]
     pub fn quality(&self) -> Option<&str> {
         self.quality.as_deref()
     }
+    #[inline]
     pub fn codec(&self) -> Option<&str> {
         self.codec.as_deref()
     }
+    #[inline]
     pub fn audio(&self) -> Option<&str> {
         self.audio.as_deref()
     }
+    #[inline]
     pub fn group(&self) -> Option<&str> {
         self.group.as_deref()
     }
+    #[inline]
     pub fn imdb_tag(&self) -> Option<&str> {
         self.imdb.as_deref()
     }
+    #[inline]
     pub fn extended(&self) -> bool {
         self.extended
     }
+    #[inline]
     pub fn hardcoded(&self) -> bool {
         self.hardcoded
     }
+    #[inline]
     pub fn proper(&self) -> bool {
         self.proper
     }
+    #[inline]
     pub fn repack(&self) -> bool {
         self.repack
     }
+    #[inline]
     pub fn widescreen(&self) -> bool {
         self.widescreen
     }
+    #[inline]
     pub fn unrated(&self) -> bool {
         self.unrated
     }
+    #[inline]
     pub fn three_d(&self) -> bool {
         self.three_d
     }
@@ -315,6 +333,7 @@ impl<'name> MetadataRef<'name> {
         })
     }
 
+    #[inline]
     pub fn to_owned(self) -> Metadata {
         Metadata {
             title: self.title.into(),
@@ -337,54 +356,71 @@ impl<'name> MetadataRef<'name> {
         }
     }
 
+    #[inline]
     pub fn title(&self) -> &str {
         &self.title
     }
+    #[inline]
     pub fn season(&self) -> Option<u16> {
         self.season
     }
+    #[inline]
     pub fn episode(&self) -> Option<u16> {
         self.episode
     }
+    #[inline]
     pub fn year(&self) -> Option<u16> {
         self.year
     }
+    #[inline]
     pub fn resolution(&self) -> Option<&str> {
         self.resolution
     }
+    #[inline]
     pub fn quality(&self) -> Option<&str> {
         self.quality
     }
+    #[inline]
     pub fn codec(&self) -> Option<&str> {
         self.codec
     }
+    #[inline]
     pub fn audio(&self) -> Option<&str> {
         self.audio
     }
+    #[inline]
     pub fn group(&self) -> Option<&str> {
         self.group
     }
+    #[inline]
     pub fn imdb_tag(&self) -> Option<&str> {
         self.imdb
     }
+    #[inline]
     pub fn extended(&self) -> bool {
         self.extended
     }
+    #[inline]
     pub fn hardcoded(&self) -> bool {
         self.hardcoded
     }
+    #[inline]
     pub fn proper(&self) -> bool {
         self.proper
     }
+    #[inline]
     pub fn repack(&self) -> bool {
         self.repack
     }
+    #[inline]
     pub fn widescreen(&self) -> bool {
         self.widescreen
     }
+    #[inline]
     pub fn unrated(&self) -> bool {
         self.unrated
     }
+    #[inline]
     pub fn three_d(&self) -> bool {
         self.three_d
     }
