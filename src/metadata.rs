@@ -1,10 +1,24 @@
 use crate::error::ErrorMatch;
 use crate::pattern;
 use crate::pattern::Pattern;
+use bitflags::bitflags;
 use regex::Captures;
 use smartstring::alias::String;
 use std::borrow::Cow;
 use std::cmp::{max, min};
+
+bitflags! {
+    #[derive(Default)]
+    struct Flags: u32 {
+        const EXTENDED = 0x01;
+        const HARDCODED = 0x02;
+        const PROPER = 0x04;
+        const REPACK = 0x08;
+        const WIDESCREEN = 0x10;
+        const UNRATED = 0x20;
+        const THREE_D = 0x40;
+    }
+}
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct MetadataRef<'name> {
@@ -17,13 +31,7 @@ pub struct MetadataRef<'name> {
     codec: Option<&'name str>,
     audio: Option<&'name str>,
     group: Option<&'name str>,
-    extended: bool,
-    hardcoded: bool,
-    proper: bool,
-    repack: bool,
-    widescreen: bool,
-    unrated: bool,
-    three_d: bool,
+    flags: Flags,
     imdb: Option<&'name str>,
 }
 
@@ -38,13 +46,7 @@ pub struct Metadata {
     codec: Option<String>,
     audio: Option<String>,
     group: Option<String>,
-    extended: bool,
-    hardcoded: bool,
-    proper: bool,
-    repack: bool,
-    widescreen: bool,
-    unrated: bool,
-    three_d: bool,
+    flags: Flags,
     imdb: Option<String>,
 }
 
@@ -137,31 +139,31 @@ impl Metadata {
     }
     #[inline]
     pub fn extended(&self) -> bool {
-        self.extended
+        self.flags.contains(Flags::EXTENDED)
     }
     #[inline]
     pub fn hardcoded(&self) -> bool {
-        self.hardcoded
+        self.flags.contains(Flags::HARDCODED)
     }
     #[inline]
     pub fn proper(&self) -> bool {
-        self.proper
+        self.flags.contains(Flags::PROPER)
     }
     #[inline]
     pub fn repack(&self) -> bool {
-        self.repack
+        self.flags.contains(Flags::REPACK)
     }
     #[inline]
     pub fn widescreen(&self) -> bool {
-        self.widescreen
+        self.flags.contains(Flags::WIDESCREEN)
     }
     #[inline]
     pub fn unrated(&self) -> bool {
-        self.unrated
+        self.flags.contains(Flags::UNRATED)
     }
     #[inline]
     pub fn three_d(&self) -> bool {
-        self.three_d
+        self.flags.contains(Flags::THREE_D)
     }
 }
 
@@ -312,6 +314,29 @@ impl<'name> MetadataRef<'name> {
             Cow::Borrowed(s) => Cow::Borrowed(s.trim()),
         };
 
+        let mut flags = Flags::empty();
+        if extended.is_some() {
+            flags.insert(Flags::EXTENDED);
+        }
+        if hardcoded.is_some() {
+            flags.insert(Flags::HARDCODED);
+        }
+        if proper.is_some() {
+            flags.insert(Flags::PROPER);
+        }
+        if repack.is_some() {
+            flags.insert(Flags::REPACK);
+        }
+        if widescreen.is_some() {
+            flags.insert(Flags::WIDESCREEN);
+        }
+        if unrated.is_some() {
+            flags.insert(Flags::UNRATED);
+        }
+        if three_d.is_some() {
+            flags.insert(Flags::THREE_D);
+        }
+
         Ok(Self {
             title,
             season: season.map(|s| s.parse().unwrap()),
@@ -322,13 +347,7 @@ impl<'name> MetadataRef<'name> {
             codec,
             audio,
             group,
-            extended: extended.is_some(),
-            hardcoded: hardcoded.is_some(),
-            proper: proper.is_some(),
-            repack: repack.is_some(),
-            widescreen: widescreen.is_some(),
-            unrated: unrated.is_some(),
-            three_d: three_d.is_some(),
+            flags,
             imdb,
         })
     }
@@ -345,13 +364,7 @@ impl<'name> MetadataRef<'name> {
             codec: self.codec.map(String::from),
             audio: self.audio.map(String::from),
             group: self.group.map(String::from),
-            extended: self.extended,
-            hardcoded: self.hardcoded,
-            proper: self.proper,
-            repack: self.repack,
-            widescreen: self.widescreen,
-            unrated: self.unrated,
-            three_d: self.three_d,
+            flags: self.flags,
             imdb: self.imdb.map(String::from),
         }
     }
@@ -398,30 +411,30 @@ impl<'name> MetadataRef<'name> {
     }
     #[inline]
     pub fn extended(&self) -> bool {
-        self.extended
+        self.flags.contains(Flags::EXTENDED)
     }
     #[inline]
     pub fn hardcoded(&self) -> bool {
-        self.hardcoded
+        self.flags.contains(Flags::HARDCODED)
     }
     #[inline]
     pub fn proper(&self) -> bool {
-        self.proper
+        self.flags.contains(Flags::PROPER)
     }
     #[inline]
     pub fn repack(&self) -> bool {
-        self.repack
+        self.flags.contains(Flags::REPACK)
     }
     #[inline]
     pub fn widescreen(&self) -> bool {
-        self.widescreen
+        self.flags.contains(Flags::WIDESCREEN)
     }
     #[inline]
     pub fn unrated(&self) -> bool {
-        self.unrated
+        self.flags.contains(Flags::UNRATED)
     }
     #[inline]
     pub fn three_d(&self) -> bool {
-        self.three_d
+        self.flags.contains(Flags::THREE_D)
     }
 }
