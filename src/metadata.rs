@@ -287,15 +287,17 @@ impl FromStr for Metadata {
             |caps| caps.get(1).map(|m| m.as_str()),
         )
         .map(String::from);
-        let country = check_pattern_and_extract(
-            &pattern::COUNTRY,
+        let mut country = None;
+        if !skip_country_regex_matching(name) {
+            country = check_pattern_and_extract(
+                    &pattern::COUNTRY,
             name,
             &mut title_start,
             &mut title_end,
             |caps| caps.name("country").map(|m| m.as_str()),
         )
         .map(String::from);
-
+        }
         let extended = check_pattern(&pattern::EXTENDED, name, &mut title_start, &mut title_end);
         let hardcoded = check_pattern(&pattern::HARDCODED, name, &mut title_start, &mut title_end);
         let proper = check_pattern(&pattern::PROPER, name, &mut title_start, &mut title_end);
@@ -385,5 +387,26 @@ impl TryFrom<&str> for Metadata {
 
     fn try_from(s: &str) -> Result<Self, Self::Error> {
         Metadata::from_str(s)
+    }
+}
+
+fn skip_country_regex_matching(title: &str) -> bool {
+    use regex::{RegexSet};
+    let set = RegexSet::new(&[
+        r"(?i)the.last.of.us",
+        r"(?i)criminal[:]?.uk",
+    ]).unwrap();
+
+    set.is_match(title)
+}
+
+#[cfg(test)]
+mod test_regex_set {
+
+    use super::*;
+    #[test]
+    fn skip_matches() {
+        assert!(skip_country_regex_matching("the.last.of.us.s01E01.avi"));
+        assert!(skip_country_regex_matching("criminal: uk"));
     }
 }
