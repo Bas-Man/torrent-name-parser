@@ -290,13 +290,13 @@ impl FromStr for Metadata {
         let mut country = None;
         if !skip_country_regex_matching(name) {
             country = check_pattern_and_extract(
-                    &pattern::COUNTRY,
-            name,
-            &mut title_start,
-            &mut title_end,
-            |caps| caps.name("country").map(|m| m.as_str()),
-        )
-        .map(String::from);
+                &pattern::COUNTRY,
+                name,
+                &mut title_start,
+                &mut title_end,
+                |caps| caps.name("country").map(|m| m.as_str()),
+            )
+            .map(String::from);
         }
         let extended = check_pattern(&pattern::EXTENDED, name, &mut title_start, &mut title_end);
         let hardcoded = check_pattern(&pattern::HARDCODED, name, &mut title_start, &mut title_end);
@@ -391,11 +391,8 @@ impl TryFrom<&str> for Metadata {
 }
 
 fn skip_country_regex_matching(title: &str) -> bool {
-    use regex::{RegexSet};
-    let set = RegexSet::new(&[
-        r"(?i)the.last.of.us",
-        r"(?i)criminal[:]?.uk",
-    ]).unwrap();
+    use regex::RegexSet;
+    let set = RegexSet::new(&[r"(?i)the.last.of.us", r"(?i)criminal[:]?.uk"]).unwrap();
 
     set.is_match(title)
 }
